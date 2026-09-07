@@ -8,6 +8,7 @@ class CakeCreate(BaseModel):
     description: str = Field(max_length=3000)
     price_kopiyky: int = Field(gt=0)
     weight_grams: int = Field(gt=0)
+    is_available: bool = True
 
 
 class CakeRead(CakeCreate):

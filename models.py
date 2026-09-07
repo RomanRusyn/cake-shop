@@ -1,4 +1,4 @@
-from sqlalchemy import CheckConstraint
+from sqlalchemy import CheckConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from database import Base
@@ -17,3 +17,7 @@ class Cake(Base):
     description: Mapped[str]
     price_kopiyky: Mapped[int]
     weight_grams: Mapped[int]
+    is_available: Mapped[bool] = mapped_column(
+        default=True,
+        server_default=text("1"),
+    )

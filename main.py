@@ -5,14 +5,13 @@ from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from database import Base, engine, get_session
+from database import engine, get_session
 from models import Cake
 from schemas import CakeCreate, CakeRead
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(engine)
     yield
     engine.dispose()
 
@@ -29,7 +28,7 @@ def health_check():
 
 @app.get("/cakes", response_model=list[CakeRead])
 def list_cakes(session: SessionDep):
-    statement = select(Cake).order_by(Cake.id)
+    statement = select(Cake).where(Cake.is_available.is_(True)).order_by(Cake.id)
     return session.scalars(statement).all()
 
 
@@ -37,7 +36,7 @@ def list_cakes(session: SessionDep):
 def get_cake(cake_id: int, session: SessionDep):
     cake = session.get(Cake, cake_id)
 
-    if cake is None:
+    if cake is None or not cake.is_available:
         raise HTTPException(status_code=404, detail="Cake not found")
 
     return cake
@@ -68,6 +67,7 @@ def update_cake(
     cake.description = cake_data.description
     cake.price_kopiyky = cake_data.price_kopiyky
     cake.weight_grams = cake_data.weight_grams
+    cake.is_available = cake_data.is_available
 
     session.commit()
     session.refresh(cake)
