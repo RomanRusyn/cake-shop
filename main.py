@@ -52,3 +52,24 @@ def create_cake(cake_data: CakeCreate, session: SessionDep):
     session.refresh(cake)
 
     return cake
+
+@app.put("/cakes/{cake_id}", response_model=CakeRead)
+def update_cake(
+    cake_id: int,
+    cake_data: CakeCreate,
+    session: SessionDep,
+):
+    cake = session.get(Cake, cake_id)
+
+    if cake is None:
+        raise HTTPException(status_code=404, detail="Cake not found")
+
+    cake.name = cake_data.name
+    cake.description = cake_data.description
+    cake.price_kopiyky = cake_data.price_kopiyky
+    cake.weight_grams = cake_data.weight_grams
+
+    session.commit()
+    session.refresh(cake)
+
+    return cake
