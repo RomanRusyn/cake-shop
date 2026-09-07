@@ -9,6 +9,7 @@ class CakeCreate(BaseModel):
     price_kopiyky: int = Field(gt=0)
     weight_grams: int = Field(gt=0)
     is_available: bool = True
+    internal_notes: str | None = None
 
 
 class CakeRead(CakeCreate):

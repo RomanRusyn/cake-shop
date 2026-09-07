@@ -68,6 +68,7 @@ def update_cake(
     cake.price_kopiyky = cake_data.price_kopiyky
     cake.weight_grams = cake_data.weight_grams
     cake.is_available = cake_data.is_available
+    cake.internal_notes = cake_data.internal_notes
 
     session.commit()
     session.refresh(cake)

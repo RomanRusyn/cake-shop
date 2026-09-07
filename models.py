@@ -1,4 +1,4 @@
-from sqlalchemy import CheckConstraint, text
+from sqlalchemy import CheckConstraint, text, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from database import Base
@@ -21,3 +21,4 @@ class Cake(Base):
         default=True,
         server_default=text("1"),
     )
+    internal_notes: Mapped[str | None] = mapped_column(Text)
