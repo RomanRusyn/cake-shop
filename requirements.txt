@@ -11,6 +11,7 @@ fastapi==0.141.1
 fastapi-cli==0.0.32
 fastapi-cloud-cli==0.25.0
 fastar==0.12.0
+greenlet==3.5.5
 h11==0.16.0
 httpcore==1.0.9
 httptools==0.8.0
@@ -33,6 +34,7 @@ rich-toolkit==0.20.4
 rignore==0.8.1
 sentry-sdk==2.68.1
 shellingham==1.5.4
+SQLAlchemy==2.0.52
 starlette==1.6.0
 typer==0.27.2
 typing-inspection==0.4.4

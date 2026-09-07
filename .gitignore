@@ -3,3 +3,5 @@ __pycache__/
 *.py[cod]
 .env
 .idea/
+cake_shop.db
+cake_shop.db-*
