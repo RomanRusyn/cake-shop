@@ -45,3 +45,9 @@ def client(monkeypatch):
             yield test_client
     finally:
         test_engine.dispose()
+
+
+@pytest.fixture
+def db_session(client):
+    get_test_session = app.dependency_overrides[get_session]
+    yield from get_test_session()
