@@ -9,6 +9,7 @@ from pydantic import (
     field_validator,
 )
 
+from order_status import OrderStatus
 
 class CakeCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
@@ -95,7 +96,7 @@ class OrderRead(BaseModel):
     customer_phone: str
     requested_date: date
     customer_note: str | None
-    status: str
+    status: OrderStatus
     created_at: datetime
     items: list[OrderItemRead]
 
@@ -112,3 +113,9 @@ class OrderRead(BaseModel):
     @property
     def total_kopiyky(self) -> int:
         return sum(item.subtotal_kopiyky for item in self.items)
+
+
+class OrderStatusUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: OrderStatus
