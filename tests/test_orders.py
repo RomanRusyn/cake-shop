@@ -172,3 +172,182 @@ def test_order_details_require_admin(client):
     )
     assert admin_response.status_code == 200
     assert admin_response.json()["customer_name"] == "Тестове замовлення"
+
+
+def test_order_moves_through_preparation(client):
+    cake = create_cake(client)
+    response = client.post(
+        "/orders",
+        json=order_payload([
+            {"cake_id": cake["id"], "quantity": 1}
+        ]),
+    )
+    assert response.status_code == 201
+    order_id = response.json()["id"]
+
+    for next_status in [
+        "confirmed",
+        "in_preparation",
+        "ready",
+        "completed",
+    ]:
+        response = client.patch(
+            f"/admin/orders/{order_id}/status",
+            json={"status": next_status},
+            auth=ADMIN_AUTH,
+        )
+        assert response.status_code == 200, response.text
+        assert response.json()["status"] == next_status
+
+        saved = client.get(
+            f"/admin/orders/{order_id}",
+            auth=ADMIN_AUTH,
+        )
+        assert saved.status_code == 200
+        assert saved.json()["status"] == next_status
+
+
+def test_invalid_transition_preserves_status(client):
+    cake = create_cake(client)
+    response = client.post(
+        "/orders",
+        json=order_payload([
+            {"cake_id": cake["id"], "quantity": 1}
+        ]),
+    )
+    assert response.status_code == 201
+    order_id = response.json()["id"]
+
+    # A new order cannot jump directly to completed.
+    rejected = client.patch(
+        f"/admin/orders/{order_id}/status",
+        json={"status": "completed"},
+        auth=ADMIN_AUTH,
+    )
+    assert rejected.status_code == 409
+
+    saved = client.get(
+        f"/admin/orders/{order_id}",
+        auth=ADMIN_AUTH,
+    )
+    assert saved.status_code == 200
+    assert saved.json()["status"] == "new"
+
+    # Repeating the current status is allowed.
+    repeated = client.patch(
+        f"/admin/orders/{order_id}/status",
+        json={"status": "new"},
+        auth=ADMIN_AUTH,
+    )
+    assert repeated.status_code == 200
+    assert repeated.json()["status"] == "new"
+
+    # An unknown status is rejected by schema validation.
+    invalid = client.patch(
+        f"/admin/orders/{order_id}/status",
+        json={"status": "banana"},
+        auth=ADMIN_AUTH,
+    )
+    assert invalid.status_code == 422
+
+
+def test_cancelled_order_cannot_be_reopened(client):
+    cake = create_cake(client)
+    response = client.post(
+        "/orders",
+        json=order_payload([
+            {"cake_id": cake["id"], "quantity": 1}
+        ]),
+    )
+    assert response.status_code == 201
+    order_id = response.json()["id"]
+
+    cancelled = client.patch(
+        f"/admin/orders/{order_id}/status",
+        json={"status": "cancelled"},
+        auth=ADMIN_AUTH,
+    )
+    assert cancelled.status_code == 200
+    assert cancelled.json()["status"] == "cancelled"
+
+    reopened = client.patch(
+        f"/admin/orders/{order_id}/status",
+        json={"status": "confirmed"},
+        auth=ADMIN_AUTH,
+    )
+    assert reopened.status_code == 409
+
+    saved = client.get(
+        f"/admin/orders/{order_id}",
+        auth=ADMIN_AUTH,
+    )
+    assert saved.status_code == 200
+    assert saved.json()["status"] == "cancelled"
+
+
+def test_admin_order_list_filters_and_paginates(client):
+    cake = create_cake(client)
+    order_ids = []
+
+    for _ in range(3):
+        response = client.post(
+            "/orders",
+            json=order_payload([
+                {"cake_id": cake["id"], "quantity": 1}
+            ]),
+        )
+        assert response.status_code == 201
+        order_ids.append(response.json()["id"])
+
+    confirmed = client.patch(
+        f"/admin/orders/{order_ids[1]}/status",
+        json={"status": "confirmed"},
+        auth=ADMIN_AUTH,
+    )
+    assert confirmed.status_code == 200
+
+    filtered = client.get(
+        "/admin/orders",
+        params={"status": "new"},
+        auth=ADMIN_AUTH,
+    )
+    assert filtered.status_code == 200
+    assert [order["id"] for order in filtered.json()] == [
+        order_ids[2],
+        order_ids[0],
+    ]
+
+    page = client.get(
+        "/admin/orders",
+        params={"status": "new", "limit": 1, "offset": 1},
+        auth=ADMIN_AUTH,
+    )
+    assert page.status_code == 200
+    assert [order["id"] for order in page.json()] == [order_ids[0]]
+
+
+def test_order_list_and_status_update_require_admin(client):
+    cake = create_cake(client)
+    response = client.post(
+        "/orders",
+        json=order_payload([
+            {"cake_id": cake["id"], "quantity": 1}
+        ]),
+    )
+    assert response.status_code == 201
+    order_id = response.json()["id"]
+
+    assert client.get("/admin/orders").status_code == 401
+
+    unauthorized = client.patch(
+        f"/admin/orders/{order_id}/status",
+        json={"status": "confirmed"},
+    )
+    assert unauthorized.status_code == 401
+
+    saved = client.get(
+        f"/admin/orders/{order_id}",
+        auth=ADMIN_AUTH,
+    )
+    assert saved.status_code == 200
+    assert saved.json()["status"] == "new"
