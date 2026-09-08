@@ -1,0 +1,4 @@
+ADMIN_USERNAME = "tests-admin"
+ADMIN_PASSWORD = "tests-password"
+
+ADMIN_AUTH = (ADMIN_USERNAME, ADMIN_PASSWORD)

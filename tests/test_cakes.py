@@ -1,7 +1,5 @@
 import pytest
-
-
-ADMIN_AUTH = ("tests-admin", "tests-password")
+from tests.credentials import ADMIN_AUTH, ADMIN_PASSWORD, ADMIN_USERNAME
 
 CAKE_DATA = {
     "name": "Медовик",
@@ -30,8 +28,8 @@ def test_admin_routes_require_credentials(client, method, path):
 @pytest.mark.parametrize(
     "auth",
     [
-        ("tests-admin", "wrong-password"),
-        ("wrong-admin", "tests-password"),
+        (ADMIN_USERNAME, "wrong-password"),
+        ("wrong-admin", ADMIN_PASSWORD),
     ],
 )
 def test_invalid_credentials_are_rejected(client, auth):

@@ -5,9 +5,7 @@ import pytest
 from sqlalchemy import func, select
 
 from models import Order, OrderItem
-
-
-ADMIN_AUTH = ("tests-admin", "tests-password")
+from tests.credentials import ADMIN_AUTH
 
 
 def create_cake(client, **changes):

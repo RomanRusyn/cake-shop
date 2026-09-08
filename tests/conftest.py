@@ -9,16 +9,17 @@ from sqlalchemy.pool import StaticPool
 from config import settings
 from database import Base, get_session
 from main import app
+from tests.credentials import ADMIN_PASSWORD, ADMIN_USERNAME
 
 
 @pytest.fixture
 def client(monkeypatch):
     # Temporary credentials used only during this tests.
-    monkeypatch.setattr(settings, "admin_username", "tests-admin")
+    monkeypatch.setattr(settings, "admin_username", ADMIN_USERNAME)
     monkeypatch.setattr(
         settings,
         "admin_password_hash",
-        SecretStr(PasswordHash.recommended().hash("tests-password")),
+        SecretStr(PasswordHash.recommended().hash(ADMIN_PASSWORD)),
     )
 
     # A fresh database in memory for each tests.
