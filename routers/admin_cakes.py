@@ -1,12 +1,13 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 
 from dependencies import SessionDep
 from models import Cake
 from schemas import CakeCreate, CakeRead
+from security import require_admin
 
 
-router = APIRouter(prefix="/admin/cakes", tags=["Admin cakes"])
+router = APIRouter(prefix="/admin/cakes", tags=["Admin cakes"], dependencies=[Depends(require_admin)],)
 
 
 @router.get("", response_model=list[CakeRead])
