@@ -5,3 +5,4 @@ __pycache__/
 .idea/
 cake_shop.db
 cake_shop.db-*
+.pytest_cache/
