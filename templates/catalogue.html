@@ -13,7 +13,7 @@
         {% for cake in cakes %}
             <article class="cake-card">
                 <p class="cake-weight">{{ cake.weight_grams }} г</p>
-                <h2>{{ cake.name }}</h2>
+                <h2><a href="{{ url_for('cake_detail_page', cake_id=cake.id) }}">{{ cake.name }}</a></h2>
                 <p class="cake-description">{{ cake.description }}</p>
                 <p class="cake-price">{{ cake.price_kopiyky | uah }}</p>
             </article>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{{ cake.name }} — Cake Shop{% endblock %}
+
+{% block content %}
+    <a class="back-link" href="{{ url_for('catalogue_page') }}">
+        ← Усі торти
+    </a>
+
+    <article class="cake-detail">
+        <p class="eyebrow">НАШІ ТОРТИ</p>
+        <h1>{{ cake.name }}</h1>
+        <p class="cake-weight">Вага: {{ cake.weight_grams }} г</p>
+        <p class="cake-description">{{ cake.description }}</p>
+        <p class="cake-price">{{ cake.price_kopiyky | uah }}</p>
+    </article>
+{% endblock %}

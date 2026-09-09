@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
@@ -40,4 +40,31 @@ def catalogue_page(request: Request, session: SessionDep):
         request=request,
         name="catalogue.html",
         context={"cakes": cakes},
+    )
+
+
+@router.get(
+    "/catalogue/{cake_id}",
+    response_class=HTMLResponse,
+    name="cake_detail_page",
+)
+def cake_detail_page(
+    cake_id: int,
+    request: Request,
+    session: SessionDep,
+):
+    cake = session.get(Cake, cake_id)
+
+    if cake is None or not cake.is_available:
+        return templates.TemplateResponse(
+            request=request,
+            name="not_found.html",
+            context={},
+            status_code=404,
+        )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="cake_detail.html",
+        context={"cake": cake},
     )
