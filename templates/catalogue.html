@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Наші торти — Cake Shop{% endblock %}
+
+{% block content %}
+    <section class="intro">
+        <p class="eyebrow">КОЛЕКЦІЯ СМАКІВ</p>
+        <h1>Знайдіть свій улюблений торт</h1>
+        <p>Перегляньте смаки, описи та ціни в нашому каталозі.</p>
+    </section>
+
+    <section class="cake-grid" aria-label="Каталог тортів">
+        {% for cake in cakes %}
+            <article class="cake-card">
+                <p class="cake-weight">{{ cake.weight_grams }} г</p>
+                <h2>{{ cake.name }}</h2>
+                <p class="cake-description">{{ cake.description }}</p>
+                <p class="cake-price">{{ cake.price_kopiyky | uah }}</p>
+            </article>
+        {% else %}
+            <p class="empty-state">
+                Зараз каталог оновлюється. Завітайте трохи пізніше.
+            </p>
+        {% endfor %}
+    </section>
+{% endblock %}

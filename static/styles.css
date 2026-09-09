@@ -1,0 +1,113 @@
+:root {
+    font-family: system-ui, sans-serif;
+    color: #352922;
+    background: #fcf8f3;
+    line-height: 1.6;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+.site-header,
+.container,
+.site-footer {
+    width: min(1100px, 100%);
+    margin-inline: auto;
+    padding: 24px;
+}
+
+.site-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid #e5d8cd;
+}
+
+.brand {
+    color: #713f32;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.brand:focus-visible {
+    outline: 3px solid #713f32;
+    outline-offset: 5px;
+}
+
+.intro {
+    max-width: 700px;
+    padding-block: 36px;
+}
+
+.eyebrow {
+    color: #875344;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.15;
+    margin-block: 16px;
+}
+
+.cake-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 24px;
+}
+
+.cake-card {
+    display: flex;
+    flex-direction: column;
+    padding: 28px;
+    background: #fff;
+    border: 1px solid #e5d8cd;
+    border-radius: 18px;
+    overflow-wrap: anywhere;
+}
+
+.cake-card h2 {
+    margin-block: 0 12px;
+    line-height: 1.3;
+}
+
+.cake-weight {
+    color: #725f53;
+    margin-block: 0 12px;
+}
+
+.cake-description {
+    white-space: pre-line;
+    margin-block: 0 24px;
+}
+
+.cake-price {
+    margin-block: auto 0;
+    padding-top: 12px;
+    font-size: 1.4rem;
+    font-weight: 750;
+    color: #713f32;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    padding: 32px;
+    background: #fff;
+    border-radius: 18px;
+}
+
+.site-footer {
+    margin-top: 48px;
+    color: #725f53;
+    font-size: 0.9rem;
+}
