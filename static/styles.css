@@ -142,3 +142,65 @@ h1 {
     border-radius: 18px;
     overflow-wrap: anywhere;
 }
+
+.order-section {
+    max-width: 760px;
+    margin-top: 32px;
+}
+
+.order-form {
+    display: grid;
+    gap: 16px;
+}
+
+.order-form[hidden] {
+    display: none;
+}
+
+.order-form label {
+    display: grid;
+    gap: 6px;
+    font-weight: 600;
+}
+
+.order-form input,
+.order-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ad9788;
+    border-radius: 8px;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+}
+
+.order-form textarea {
+    resize: vertical;
+}
+
+.order-form button {
+    padding: 14px 20px;
+    border: 0;
+    border-radius: 8px;
+    background: #713f32;
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.order-form button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.order-form input:focus-visible,
+.order-form textarea:focus-visible,
+.order-form button:focus-visible {
+    outline: 3px solid #713f32;
+    outline-offset: 3px;
+}
+
+#order-message {
+    font-weight: 600;
+}

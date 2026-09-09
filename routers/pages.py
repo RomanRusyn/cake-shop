@@ -1,4 +1,6 @@
+from datetime import datetime, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import HTMLResponse
@@ -63,8 +65,13 @@ def cake_detail_page(
             status_code=404,
         )
 
+    tomorrow = (
+            datetime.now(ZoneInfo("Europe/Kyiv")).date()
+            + timedelta(days=1)
+    )
+
     return templates.TemplateResponse(
         request=request,
         name="cake_detail.html",
-        context={"cake": cake},
+        context={"cake": cake, "min_order_date": tomorrow.isoformat(),},
     )

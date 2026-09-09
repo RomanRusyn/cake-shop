@@ -14,4 +14,91 @@
         <p class="cake-description">{{ cake.description }}</p>
         <p class="cake-price">{{ cake.price_kopiyky | uah }}</p>
     </article>
+
+    <section class="order-section" aria-labelledby="order-heading">
+        <h2 id="order-heading">Замовити цей торт</h2>
+        <p>
+            Надішліть заявку. Дату та деталі потрібно підтвердити окремо.
+            Оплата на цьому кроці не здійснюється.
+        </p>
+
+        <form
+            id="order-form"
+            class="order-form"
+            action="/orders"
+            method="post"
+            data-cake-id="{{ cake.id }}"
+        >
+            <label>
+                Кількість
+                <input
+                    name="quantity"
+                    type="number"
+                    min="1"
+                    max="20"
+                    step="1"
+                    value="1"
+                    required
+                >
+            </label>
+
+            <label>
+                Ваше ім’я
+                <input
+                    name="customer_name"
+                    autocomplete="name"
+                    maxlength="150"
+                    required
+                >
+            </label>
+
+            <label>
+                Телефон
+                <input
+                    name="customer_phone"
+                    type="tel"
+                    autocomplete="tel"
+                    placeholder="+380501234567"
+                    pattern="\+380[0-9]{9}"
+                    aria-describedby="phone-hint"
+                    required
+                >
+            </label>
+            <small id="phone-hint">Формат: +380 і ще 9 цифр, без пробілів.</small>
+
+            <label>
+                Бажана дата
+                <input
+                    name="requested_date"
+                    type="date"
+                    min="{{ min_order_date }}"
+                    required
+                >
+            </label>
+
+            <label>
+                Побажання до замовлення
+                <textarea
+                    name="customer_note"
+                    rows="4"
+                    maxlength="2000"
+                ></textarea>
+            </label>
+
+            <button id="order-submit" type="submit" disabled>
+                Надіслати заявку
+            </button>
+        </form>
+
+        <p id="order-message" role="status" aria-live="polite"></p>
+
+        <noscript>
+            <p>Для надсилання заявки увімкніть JavaScript у браузері.</p>
+        </noscript>
+    </section>
+
+    <script
+        src="{{ url_for('static', path='/order.js') }}"
+        defer
+    ></script>
 {% endblock %}
